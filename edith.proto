@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+option go_package = "github.com/yeboahnanaosei/edith";
+
+message Request {
+    string sender = 1;
+    string recipient = 2;
+    string filename = 3;
+    bytes body = 4;
+    string type = 5;
+}
+
+message Response {
+    string msg = 1;
+}
+
+message RequestItems {
+    repeated Request texts = 1;
+}
+
+service Edith {
+    rpc SendText(Request) returns (Response) {}
+    rpc SendFile(Request) returns (Response) {}
+    rpc GetText(Request) returns (RequestItems) {}
+    rpc GetFile(Request) returns (Response) {}
+}
