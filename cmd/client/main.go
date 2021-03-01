@@ -221,12 +221,9 @@ func prepareRequest(args []string) (*edith.Request, error) {
 			req.Type = "file"
 		}
 
-		req.Sender = sender
-		req.Recipient = recipient
+		req.Sender, req.Recipient = sender, recipient
 	case "get":
-		req.Sender = recipient
-		req.Recipient = sender
-		req.Type = item
+		req.Sender, req.Recipient, req.Type = recipient, sender, item
 	}
 	return req, nil
 }
@@ -300,6 +297,22 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Fprintf(os.Stdout, "edith: %v\n", res)
-	os.Exit(0)
+	switch r := res.(type) {
+	case *edith.RequestItems:
+		fmt.Fprintf(os.Stdout, "\nLast 5 texts from %s:\n\n", strings.Title(os.Args[2]))
+		for i, t := range r.Texts {
+			if i == len(r.Texts) - 1 {
+				fmt.Fprintf(os.Stdout, "%d.\n%s\n", i+1, t.Body)
+			} else {
+				fmt.Fprintf(os.Stdout, "%d.\n%s\n\n\n", i+1, t.Body)
+			}
+		}
+		os.Exit(0)
+	case *edith.Response:
+		fmt.Fprintf(os.Stdout, "edith: %v\n", r.Msg)
+		os.Exit(0)
+	default:
+		fmt.Fprintf(os.Stderr, "edith: unknown type of res: %T", res)
+		os.Exit(1)
+	}
 }

@@ -94,7 +94,7 @@ func (s *service) SendFile(ctx context.Context, req *edith.Request) (*edith.Resp
 }
 
 func (s *service) GetText(ctx context.Context, req *edith.Request) (*edith.RequestItems, error) {
-	recipient, err := getRecipient(req.Recipient)
+	_, err := getRecipient(req.Recipient)
 	if err != nil {
 		log.Println("could not get your name as a recipient: ", err)
 		s := status.New(codes.InvalidArgument, "could not determine your name as a recipient: "+err.Error())
@@ -108,7 +108,7 @@ func (s *service) GetText(ctx context.Context, req *edith.Request) (*edith.Reque
 		return nil, s.Err()
 	}
 
-	requests, err := getRequestFromDB(recipient, req, 5)
+	requests, err := getRequestFromDB(req, 5)
 	if sql.ErrNoRows == err {
 		log.Println("request to retrieve text return no rows", err, req.Sender, req.Recipient)
 		return nil, status.Error(codes.NotFound, fmt.Sprintf("no mails found sent from %s to %s", req.Sender, req.Recipient))

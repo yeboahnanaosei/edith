@@ -188,7 +188,7 @@ func uploadFile(recipient string, req *edith.Request) error {
 
 // getRequestFromDB saves a copy of the mail to a database.
 // This is to make it easy for retrieval
-func getRequestFromDB(recipient string, req *edith.Request, limit int) ([]*edith.Request, error) {
+func getRequestFromDB(req *edith.Request, limit int) ([]*edith.Request, error) {
 	db, err := sql.Open("sqlite3", filepath.Join(serverRoot, "edithd.db"))
 	if err != nil {
 		return nil, err
@@ -196,10 +196,11 @@ func getRequestFromDB(recipient string, req *edith.Request, limit int) ([]*edith
 	defer db.Close()
 
 	rows, err := db.Query(
-		fmt.Sprintf("SELECT * FROM mails WHERE sender = ? AND recipient = ? AND item_sent = ? ORDER BY date_sent DESC LIMIT %d", limit),
-		strings.ToLower(req.Recipient),strings.ToLower(req.Sender), strings.ToLower(req.Type),
+		fmt.Sprintf("SELECT sender, recipient, item_sent, payload FROM mails WHERE sender = ? AND recipient = ? AND item_sent = ? ORDER BY date_sent DESC LIMIT %d", limit),
+		strings.ToLower(req.Sender), strings.ToLower(req.Recipient), strings.ToLower(req.Type),
 	)
 
+	
 	if err != nil {
 		return nil, err
 	}
@@ -207,9 +208,8 @@ func getRequestFromDB(recipient string, req *edith.Request, limit int) ([]*edith
 	requests := []*edith.Request{}
 	for rows.Next() {
 		r := &edith.Request{}
-		rows.Scan(&r.Sender, &r.Recipient, &r.Type)
+		rows.Scan(&r.Sender, &r.Recipient, &r.Type, &r.Body)
 		requests = append(requests, r)
 	}
-	fmt.Println(requests)
 	return requests, nil
 }
