@@ -299,18 +299,23 @@ func main() {
 
 	switch r := res.(type) {
 	case *edith.RequestItems:
+		itemsLen := len(r.Texts)
+		if itemsLen == 0 {
+			fmt.Fprintf(os.Stdout, "\nYou have no items from %s\n", strings.Title(os.Args[2]))
+			os.Exit(0)
+		}
+
 		fmt.Fprintf(os.Stdout, "\nLast 5 texts from %s:\n\n", strings.Title(os.Args[2]))
-		for i, t := range r.Texts {
-			if i == len(r.Texts) - 1 {
-				fmt.Fprintf(os.Stdout, "%d.\n%s\n", i+1, t.Body)
-			} else {
-				fmt.Fprintf(os.Stdout, "%d.\n%s\n\n\n", i+1, t.Body)
-			}
+
+		for x := len(r.Texts); x > 0; x-- {
+			fmt.Fprintf(os.Stdout, "%d.\n%s\n\n", x, r.Texts[x-1].Body)
 		}
 		os.Exit(0)
+
 	case *edith.Response:
 		fmt.Fprintf(os.Stdout, "edith: %v\n", r.Msg)
 		os.Exit(0)
+
 	default:
 		fmt.Fprintf(os.Stderr, "edith: unknown type of res: %T", res)
 		os.Exit(1)
