@@ -1,3 +1,4 @@
+// This is the cli client for edithd (the server daemon)
 package main
 
 import (

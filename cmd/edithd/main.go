@@ -1,3 +1,4 @@
+// This is the server (daemon) called edithd
 package main
 
 import (
