@@ -307,7 +307,7 @@ func main() {
 
 		fmt.Fprintf(os.Stdout, "\nLast 5 texts from %s:\n\n", strings.Title(os.Args[2]))
 
-		for x := len(r.Texts); x > 0; x-- {
+		for x := itemsLen; x > 0; x-- {
 			fmt.Fprintf(os.Stdout, "%d.\n%s\n\n", x, r.Texts[x-1].Body)
 		}
 		os.Exit(0)
