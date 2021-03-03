@@ -1,3 +1,4 @@
 edithd.service
 /build
 release*
+.vscode
