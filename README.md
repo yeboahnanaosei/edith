@@ -3,4 +3,5 @@ exchange files and bits of text
 
 # CONTRIBUTING
 This is project is largely for learning purpose.
-I am however very very very open to ideas.
+I am however very very very open to ideas. Hit me up @yeboahnanaosei on twitter
+or send me an email yeboahnanaosei@gmail or leave an issue.
